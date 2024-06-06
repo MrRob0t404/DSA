@@ -15,50 +15,25 @@
  * 5.2 If the stack is not empty, it means that there are unmatched opening brackets, so the function returns false.
  */
 var isValid = function (s) {
-  if (s.length % 2 === 1) return false;
-
-  let stackOpen = new Array();
-
-  for (let i = 0; i < s.length; i++) {
-    switch (s[i]) {
-      case "(":
-        stackOpen.push(")");
-        break;
-      case "{":
-        stackOpen.push("}");
-        break;
-      case "[":
-        stackOpen.push("]");
-        break;
-      case ")":
-        if (stackOpen.length === 0) {
-          return false;
-        } else if (stackOpen.pop() !== s[i]) {
-          return false;
-        }
-        break;
-      case "]":
-        if (stackOpen.length === 0) {
-          return false;
-        } else if (stackOpen.pop() !== s[i]) {
-          return false;
-        }
-        break;
-      case "}":
-        if (stackOpen.length === 0) {
-          return false;
-        } else if (stackOpen.pop() !== s[i]) {
-          return false;
-        }
-        break;
-      default:
-        console.log("default case");
+  let stack = []; // create an empty stack to store opening brackets
+  for (let c of s) {
+    // loop through each character in the string
+    if (c === "(" || c === "{" || c === "[") {
+      // if the character is an opening bracket
+      stack.push(c); // push it onto the stack
+    } else {
+      // if the character is a closing bracket
+      if (
+        !stack.length || // if the stack is empty or
+        (c === ")" && stack[stack.length - 1] !== "(") || // the closing bracket doesn't match the corresponding opening bracket at the top of the stack
+        (c === "}" && stack[stack.length - 1] !== "{") ||
+        (c === "]" && stack[stack.length - 1] !== "[")
+      ) {
+        return false; // the string is not valid, so return false
+      }
+      stack.pop(); // otherwise, pop the opening bracket from the stack
     }
   }
-
-  if (stackOpen.length > 0) {
-    return false;
-  }
-
-  return true;
+  return !stack.length; // if the stack is empty, all opening brackets have been matched with their corresponding closing brackets,
+  // so the string is valid, otherwise, there are unmatched opening brackets, so return false
 };
